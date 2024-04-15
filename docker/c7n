@@ -6,7 +6,7 @@ ARG PYTHON_VERSION="3.12"
 
 # pre-requisite distro deps, and build env setup
 RUN adduser -D --gecos "" custodian
-RUN apk add curl bash python-${PYTHON_VERSION}
+RUN apk add curl bash git wget python-${PYTHON_VERSION}
 
 SHELL ["/bin/bash", "-c"]
 
@@ -38,7 +38,7 @@ RUN if [[ " ${providers[*]} " =~ "gcp" ]]; then     . /app/bin/activate &&     c
 
 
 ADD tools/c7n_azure/pyproject.toml tools/c7n_azure/poetry.lock /src/tools/c7n_azure/
-RUN if [[ " ${providers[*]} " =~ "azure" ]]; then     . /app/bin/activate &&     cd tools/c7n_azure &&     poetry install --without dev --no-root; fi
+RUN if [[ " ${providers[*]} " =~ "azure" ]]; then     . /app/bin/activate &&     cd tools/c7n_azure &&     poetry install --without dev --no-root && wget wget https://raw.githubusercontent.com/clumio-code/azure-sdk-trim/main/azure_sdk_trim/azure_sdk_trim.py && python azure_sdk_trim.py; fi
 
 
 ADD tools/c7n_kube/pyproject.toml tools/c7n_kube/poetry.lock /src/tools/c7n_kube/
